@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+			<title>
+				{{ site.name }}
+		    	{% if post %}
+      			- {{ post.title }}
+ 		    	{% endif %}
+		    </title>
+
+    	{{ header_meta }}
+
+    	<link href="assets/css/styles.css" rel="stylesheet">
+	    <link rel="shortcut icon" href="{{ site.avatar }}">
+
+    	{{ analytics_code }}
+	</head>
+	<body id="top">
+
+
+    <header class="header-wrap {% if post %}half-header{% endif %}" role="banner" itemscope itemtype="http://schema.org/WPHeader">
+      
+      <div class="header-title">
+        <h1 itemprop="headline"><a href="{{ site.base_url }}">{{ site.name }}</a></h1>
+        <h4 itemprop="description">{{ site.bio }}</h4>
+      </div>
+
+      {% if pages %}
+      <nav class="menu" role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement">
+        <div class="menu-wrap">
+          <h1 class="menu-header"><a href="/">{{ site.name }}</a></h1>
+          <ul class="menu-list">
+            <li itemprop="url"><a href="{{ site.base_url }}">Blog</a></li>
+            {% for page in pages %}
+            <li><a href="{{ site.base_url }}{{ page.permalink }}" title="{{ page.title }}" itemprop="name">{{ page.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="menu-toggle">Menu</div>
+      </nav>
+      {% endif %}
+    </header>
+
+    <main class="site-wrap" role="main" itemscope itemprop="mainContentOfPage" itemtype="http://schema.org/Blog">
+      <div class="container">
+
+      {% if is_home or is_tag %}
+        <div class="row">
+          <div class="columns fourteen offset-by-two">
+            <div class="blog-feed">
+            {% if posts %}
+              {% if is_tag %}
+              <h1 class="feed-header">Showing all posts tagged: {{ tag }}</h1>
+              <hr />
+              {% endif %}
+              {% for post in posts %}
+              <article class="feed-item" itemprop="blogPosts" itemscope itemtype="http://schema.org/BlogPosting">
+                <header class="item-header">
+                  <h2 itemprop="name headline" class="item-title">
+                    <a href="{{ post.permalink }}">{{ post.title }}</a>
+                  </h2>
+
+                  <div class="item-metadata">
+                    <div class="item-byline">
+                      Posted by
+                      <span itemprop="author" itemscope itemptype="http://schema.org/Person">
+                        <span itemprop="name">{{ post.author.name }}</span>
+                      </span>
+                      on
+                      <time datetime="{{ post.created_at }}" itemprop="datePublished" class="item-date">{{ post.created_at|date_format }}</time>
+                    </div>
+
+                    {% if post.tags %}
+                    <div class="item-tags">
+                      Filed under: {{ post.tags|format_tags(humanize=True) }}
+                    </div>
+                    {% endif %}
+                  </div>
+                </header>
+
+                <div class="item-body">
+                  <div class="post-content" data-type-cleanup="true" itemprop="text">
+                    {{ post.content }}
+                  </div>
+
+                  {% if post.type == 'link' or post.type == 'webclip' %}
+                  <div class="item-link-url">
+                    <i class="fa fa-share"></i> <a href="{{ post.url }}" title="Source URL" target="_blank">{{ post.url }}</a>
+                  </div>
+                  {% endif %}
+                </div>
+              </article>
+              {% endfor %}
+              {% else %}
+              <h1 class="feed-header">No posts yet :(</h1>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        {% if not is_tag and posts %}
+        {% if pagination.next or pagination.prev %}
+        <div class="row">
+          <div class="columns fourteen offset-by-two">
+            <nav role="navigation" itemscope itemtype="http://schema.org/SiteNavigationElement" class="blog-pagination">
+              {% if pagination.prev %}
+              <a href="{{ pagination.prev }}" rel="prev" itemprop="name" title="Newer Posts" class="pagination-newer">Newer Posts</a>
+              {% endif %}
+              {% if pagination.next %}
+              <a href="{{ pagination.next }}" rel="next" itemprop="name" title="Previous Posts" class="pagination-older">Older Posts</a>
+              {% endif %}
+            </nav>
+          </div>
+        </div>
+        {% endif %}
+        {% endif %}
+
+      {% elif post %}
+
+        <div class="row">
+          <div class="columns fourteen offset-by-two">
+            <article itemscope itemprop="blogPost" itemtype="http://schema.org/BlogPosting" class="blog-post">
+              <div class="post-body">
+                <header class="post-header">
+                  <h1 class="post-title">{{ post.title }}</h1>
+
+                  <div class="post-metadata">
+                    <div class="post-byline">
+                      Posted by
+                      <span itemprop="author" itemscope itemptype="http://schema.org/Person">
+                        <span itemprop="name">{{ post.author.name }}</span>
+                      </span>
+                      on
+                      <time datetime="{{ post.created_at }}" itemprop="datePublished" class="post-date">{{ post.created_at|date_format }}</time>
+                    </div>
+
+                    {% if post.tags %}
+                    <div class="post-tags">
+                      Filed under: {{ post.tags|format_tags(humanize=True) }}
+                    </div>
+                    {% endif %}
+                  </div>
+                </header>
+                <div class="post-body">
+                  <div class="post-content" data-type-cleanup="true" itemprop="text">
+                    {{ post.content }}
+                  </div>
+
+                  {% if post.type == 'link' or post.type == 'webclip' %}
+                  <div class="post-link-url">
+                    <i class="fa fa-share"></i> <a href="{{ post.url }}" title="Source URL" target="_blank">{{ post.url }}</a>
+                  </div>
+                  {% endif %}
+
+                  {{ theme.social.bar }}
+                </div>
+              </div>
+              {% if site.disqus %}
+              <div class="comments">
+                <hr class="large" />
+                <div id="disqus_thread"></div>
+                <script>(function() { var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true; dsq.src = 'http://{{ site.disqus }}.disqus.com/embed.js'; (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq); })();</script>
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              {% endif %}
+            </article>
+          </div>
+        </div>
+
+      {% elif post.type == 'page' %}
+
+        <div class="row">
+          <div class="columns fourteen offset-by-two">
+            <div class="blog-page">
+              <h1 class="page-title">{{ page.title }}</h1>
+              <div class="page-content" data-type-cleanup="true">
+                {{ post.content }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      {% endif %}
+      </div>
+    </main>
+
+    <footer class="footer-wrap" role="contentinfo" itemscope itemtype="http://schema.org/WPFooter">
+      <div class="container">
+        <div class="row">
+          <div class="columns fourteen offset-by-two">
+            <hr />
+            <div class="footer-content">
+              <p>&copy; {{ site.name }} - Powered by <a href="http://postach.io/">Postach.io</a></p>
+
+              <ul class="social-icons">
+                {% if site.twitter %}
+                <li>
+                  <a href="{{ site.twitter }}" title="Twitter" target="_blank">
+                    <i class="fa fa-twitter"></i>
+                  </a>
+                </li>
+                {% endif %}
+                {% if site.facebook %}
+                <li>
+                  <a href="{{ site.facebook }}" title="Facebook" target="_blank">
+                    <i class="fa fa-facebook"></i>
+                  </a>
+                </li>
+                {% endif %}
+                <li><a href="#" title="Github"><i class="fa fa-github"></i></a></li>
+                <li>
+                  <a href="{{ site.atom_url }}" title="RSS" target="_blank">
+                    <i class="fa fa-rss"></i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    {{ footer_meta }}
+
+	</body>
+</html>
