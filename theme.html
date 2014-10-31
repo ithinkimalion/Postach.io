@@ -27,7 +27,14 @@ Recreated for use on Postach.io
         <link rel="apple-touch-icon" href="{{ site.avatar }}"/>
         <meta name="description" content="{{ site.bio }}" />
         <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no" />
-        
+        <meta property="og:title" content="{{ post.title }}" />
+        <meta property="og:type" content="website" />
+		<meta property="og:url" content="{{ post.permalink }}" />
+		<meta property="og:image" content="{{ site.avatar }}" />
+		<meta property="og:description" content="{{ post.slug }}" />
+		<meta property="og:locale" content="en_US" />
+		<meta propery="og:site_name" content="{{ site.name }}" />
+		        
         {{ header_meta }}
         
 <!-- Scripts -->
@@ -110,11 +117,16 @@ Recreated for use on Postach.io
           							<div class="row post">
             							<div class="span6">
               								<h2><a href="{{ post.permalink }}">{{ post.title }}</a></h2>
-              								<p class="muted">Posted on {{ post.created_at|format_date }}</p>
-
+              								
+              								<iframe border="0" scrolling="no" width="78" height="17" allowtransparency="true" frameborder="0"
+ style="margin-bottom: -3px; z-index: 1338; border: 0px; background-color: transparent; overflow: hidden;"
+ src="https://www.instapaper.com/e2?url={{ post.permalink }}&title={{ post.title }}"
+></iframe>
               								<div class="post-content" data-type-cleanup="true">
                 								{{ post.content }}
               								</div>
+              								
+              								<p class="muted">Posted on {{ post.created_at|format_date }}</p>
 
             							</div>
           							</div>
