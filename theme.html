@@ -73,6 +73,11 @@ Recreated for use on Postach.io
 				<div class="links">
 					<ul>
 						<li itemprop="url"><a href="{{ site.base_url }}">Home</a></li>
+						    <!-- Categories -->
+    						<li><a href="/tag/post" class="{{ set_active('/tag/post') }}">Posts</a></li>
+    						<li><a href="/tag/shared" class="{{ set_active('/tag/shared') }}">Links</a></li>
+    						<li><a href="/tag/cooking" class="{{ set_active('/tag/cooking') }}">Food</a></li>
+    						<!-- END Categories -->
             			{% for page in pages %}
 				            <li><a href="{{ site.base_url }}{{ page.{ post.permalink } }}" title="{{ page.title }}" itemprop="name">{{ page.title }}</a></li>
 			            {% endfor %}
